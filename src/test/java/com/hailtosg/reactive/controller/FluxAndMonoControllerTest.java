@@ -66,4 +66,17 @@ public class FluxAndMonoControllerTest {
                 .returnResult();
         Assert.assertEquals(expected, result.getResponseBody());
     }
+
+    @Test
+    public void flxApproachThreePointOne() {
+        List<Integer> expected = Arrays.asList(1,2,3);
+
+        client.get().uri("/flux")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBodyList(Integer.class)
+                .consumeWith((response) -> Assert.assertEquals(expected, response.getResponseBody()));
+    }
 }
