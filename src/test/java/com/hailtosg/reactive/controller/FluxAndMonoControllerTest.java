@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -19,6 +20,7 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @WebFluxTest
+@AutoConfigureWebTestClient(timeout = "36000")
 public class FluxAndMonoControllerTest {
 
     @Autowired
@@ -42,15 +44,15 @@ public class FluxAndMonoControllerTest {
 
     @Test
     public void flxApproachTwo() {
-        client.get().uri("/flux")
-                .accept(MediaType.APPLICATION_JSON)
+        client.get().uri("/fluxFlix")
+                .accept(MediaType.APPLICATION_STREAM_JSON)
                 .exchange()
                 .expectStatus()
                     .isOk()
                 .expectHeader()
-                    .contentType(MediaType.APPLICATION_JSON)
+                    .contentType(MediaType.APPLICATION_STREAM_JSON)
                 .expectBodyList(Integer.class)
-                    .hasSize(8);
+                    .hasSize(20);
     }
 
     @Test
@@ -79,4 +81,22 @@ public class FluxAndMonoControllerTest {
                 .expectBodyList(Integer.class)
                 .consumeWith((response) -> Assert.assertEquals(expected, response.getResponseBody()));
     }
+
+    @Test
+    public void flxInfiniteApproach() {
+
+        Flux<Long> streamFlux = client.get().uri("/fluxInfinite")
+                .accept(MediaType.APPLICATION_STREAM_JSON)
+                .exchange()
+                .returnResult(Long.class)
+                .getResponseBody().log();
+
+        StepVerifier.create(streamFlux)
+                .expectNext(0L)
+                .expectNext(1L)
+                .expectNext(2L)
+                .thenCancel()
+                .verify();
+    }
+
 }

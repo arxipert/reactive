@@ -17,7 +17,11 @@ public class FluxAndMonoController {
 
     @GetMapping(value = "/fluxFlix", produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
     public Flux<Integer> getFlxFlix(){
-        return Flux.range(1, 20).delayElements(Duration.ofSeconds(2)).log();
+        return Flux.range(1, 20).delayElements(Duration.ofSeconds(1)).log();
     }
 
+    @GetMapping(value = "/fluxInfinite", produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
+    public Flux<Long> getFlxInfinite(){
+        return Flux.interval(Duration.ofSeconds(1)).log();
+    }
 }
