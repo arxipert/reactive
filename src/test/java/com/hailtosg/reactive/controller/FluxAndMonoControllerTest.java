@@ -98,5 +98,15 @@ public class FluxAndMonoControllerTest {
                 .thenCancel()
                 .verify();
     }
-
+    @Test
+    public void monoOne() {
+        Integer i = 1;
+        client.get().uri("/mono")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus()
+                .isOk()
+                .expectBody(Integer.class)
+                .consumeWith((response) -> Assert.assertEquals(i, response.getResponseBody()));
+    }
 }
