@@ -7,8 +7,6 @@ import reactor.test.StepVerifier;
 
 public class FluxAndMonoControllerTest {
 
-
-
     @Test
     public void flElementsTestWithoutError(){
         Flux<String> flux = Flux.just("Sprig", "Reactive", "Boot");
