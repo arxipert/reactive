@@ -11,7 +11,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 
@@ -32,9 +31,7 @@ public class ItemRepositoryTest {
         itemRepository.deleteAll()
                 .thenMany(Flux.fromIterable(items).log())
                 .flatMap(itemRepository::save)
-                .doOnNext(item -> {
-                    System.out.println("is : " + item);
-                })
+                .doOnNext(item -> System.out.println("is : " + item))
                 .blockLast();
     }
 
@@ -65,11 +62,12 @@ public class ItemRepositoryTest {
     @Test
     public void updateById(){
         double newPrice = 555.00;
-        Flux<Item> updatedItem = itemRepository.findByDesc("Zax").map(item -> {
-             item.setPrice(newPrice);
-             return item;
-        })
-        .flatMap(item -> itemRepository.save(item));
+        Flux<Item> updatedItem = itemRepository.findByDesc("Zax")
+                .map(item -> {
+                     item.setPrice(newPrice);
+                     return item;
+                })
+                .flatMap(item -> itemRepository.save(item));
 
         StepVerifier.create(updatedItem.log())
                 .expectSubscription()
