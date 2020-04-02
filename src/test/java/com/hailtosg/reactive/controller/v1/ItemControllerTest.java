@@ -93,6 +93,19 @@ public class ItemControllerTest {
                 .expectStatus()
                     .isCreated()
                 .expectBody()
-                .jsonPath("$.desc", "Lax");
+                .jsonPath("$.id").isNotEmpty()
+                .jsonPath("$.desc").isEqualTo("Lax")
+                .jsonPath("$.price").isEqualTo(400.00);
+    }
+
+    @Test
+    public void delete() {
+        client.delete()
+                .uri(ItemConstants.ITEMS_END_POINT_V1.concat("/{id}"), "ABC")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus()
+                    .isOk()
+                .expectBody(Void.class);
     }
 }
