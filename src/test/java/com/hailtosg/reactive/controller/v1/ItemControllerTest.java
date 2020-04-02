@@ -108,4 +108,32 @@ public class ItemControllerTest {
                     .isOk()
                 .expectBody(Void.class);
     }
+
+    @Test
+    public void updateOne() {
+        Item item = new Item(null, "Lax", 400.00);
+        client.put()
+                .uri(ItemConstants.ITEMS_END_POINT_V1.concat("/{id}"), "ABC")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Mono.just(item), Item.class)
+                .exchange()
+                .expectStatus()
+                .isCreated()
+                .expectBody()
+                .jsonPath("$.id").isEqualTo("ABC")
+                .jsonPath("$.desc").isEqualTo("Lax")
+                .jsonPath("$.price").isEqualTo(400.00);
+    }
+
+    @Test
+    public void updateOneNotFound() {
+        Item item = new Item(null, "Lax", 400.00);
+        client.put()
+                .uri(ItemConstants.ITEMS_END_POINT_V1.concat("/{id}"), "DEF")
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Mono.just(item), Item.class)
+                .exchange()
+                .expectStatus()
+                    .isNotFound();
+    }
 }
