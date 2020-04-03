@@ -118,7 +118,7 @@ public class ItemControllerTest {
                 .body(Mono.just(item), Item.class)
                 .exchange()
                 .expectStatus()
-                .isCreated()
+                .isOk()
                 .expectBody()
                 .jsonPath("$.id").isEqualTo("ABC")
                 .jsonPath("$.desc").isEqualTo("Lax")

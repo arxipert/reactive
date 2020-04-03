@@ -45,7 +45,7 @@ public class ItemController {
                     itemToUpdate.setDesc(item.getDesc());
                     return itemReactiveRepository.save(itemToUpdate);
                 })
-                .map(updatedItem -> new ResponseEntity<>(item, HttpStatus.OK))
+                .map(updatedItem -> new ResponseEntity<>(updatedItem, HttpStatus.OK))
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 

@@ -9,7 +9,8 @@ public class ItemConstants {
 
     public static final String ITEMS_END_POINT_V1 = "/v1/items";
     public static final String ITEMS_FUNCTIONAL_END_POINT_V1 = "/v1/functional/items";
-    public static final  Mono<ServerResponse> NOT_FOUND_RESPONSE = ServerResponse.notFound().build();
+    public static final String ID_SUFFIX = "/{id}";
+    public static final Mono<ServerResponse> NOT_FOUND_RESPONSE = ServerResponse.notFound().build();
 }
 
 
