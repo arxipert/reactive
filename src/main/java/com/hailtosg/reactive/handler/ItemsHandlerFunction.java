@@ -31,8 +31,9 @@ public class ItemsHandlerFunction {
     public Mono<ServerResponse> itemById(ServerRequest request) {
         String id = request.pathVariable("id");
         return itemRepository.findById(id).
-                flatMap(item -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)
+                flatMap(item -> ServerResponse.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
                         .body(fromValue(item)))
-                        .switchIfEmpty(ItemConstants.NOT_FOUND_RESPONSE);
+                .switchIfEmpty(ItemConstants.NOT_FOUND_RESPONSE);
     }
 }

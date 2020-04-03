@@ -69,4 +69,13 @@ public class ItemsHandlerTest {
                 .expectBody()
                 .jsonPath("$.price", 250.00);
     }
+
+    @Test
+    public void getOneByIdNotFound() {
+        client.get()
+                .uri(ItemConstants.ITEMS_END_POINT_V1.concat("/{id}"), "DEF")
+                .exchange()
+                .expectStatus()
+                .isNotFound();
+    }
 }
