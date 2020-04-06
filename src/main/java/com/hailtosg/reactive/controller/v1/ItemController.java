@@ -43,7 +43,7 @@ public class ItemController {
                 .flatMap(itemToUpdate -> {
                     itemToUpdate.setPrice(item.getPrice());
                     itemToUpdate.setDesc(item.getDesc());
-                    return itemReactiveRepository.save(itemToUpdate);
+                    return itemReactiveRepository.save(itemToUpdate).log();
                 })
                 .map(updatedItem -> new ResponseEntity<>(updatedItem, HttpStatus.OK))
                 .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
