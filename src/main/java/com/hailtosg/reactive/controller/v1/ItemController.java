@@ -20,6 +20,13 @@ public class ItemController {
     public ItemController(ItemReactiveRepository itemRepository) {
         itemReactiveRepository = itemRepository;
     }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> handleRte (RuntimeException exception) {
+        log.error("RTE :", exception);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exception.getMessage());
+    }
+
     @GetMapping(ITEMS_END_POINT_V1)
     public Flux<Item> getAllItems(){
         return itemReactiveRepository.findAll();
@@ -30,6 +37,12 @@ public class ItemController {
         return itemReactiveRepository.findById(id)
                 .map((item -> new ResponseEntity<>(item, HttpStatus.OK)))
                 .defaultIfEmpty(ITEM_NOT_FOUND_RESPONSE);
+    }
+
+    @GetMapping(ITEMS_END_POINT_V1 + "/rte")
+    public Flux<Item> getRtE(){
+        return itemReactiveRepository.findAll()
+                .concatWith(Mono.error(new RuntimeException("RTE!!!")));
     }
 
     @PostMapping(ITEMS_END_POINT_V1)
