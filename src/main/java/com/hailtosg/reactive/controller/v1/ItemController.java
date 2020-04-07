@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import static com.hailtosg.reactive.constants.ItemConstants.*;
 import static com.hailtosg.reactive.constants.ItemConstants.ITEM_NOT_FOUND_RESPONSE;
 import static com.hailtosg.reactive.constants.ItemConstants.NOT_FOUND_RESPONSE;
 
@@ -22,25 +23,25 @@ public class ItemController {
     public ItemController(ItemReactiveRepository itemRepository) {
         itemReactiveRepository = itemRepository;
     }
-    @GetMapping(ItemConstants.ITEMS_END_POINT_V1)
+    @GetMapping(ITEMS_END_POINT_V1)
     public Flux<Item> getAllItems(){
         return itemReactiveRepository.findAll();
     }
 
-    @GetMapping(ItemConstants.ITEMS_END_POINT_V1 + "/{id}")
+    @GetMapping(ITEMS_END_POINT_V1 + ID_SUFFIX)
     public Mono<ResponseEntity<Item>> getItemById(@PathVariable String id){
         return itemReactiveRepository.findById(id)
                 .map((item -> new ResponseEntity<>(item, HttpStatus.OK)))
                 .defaultIfEmpty(ITEM_NOT_FOUND_RESPONSE);
     }
 
-    @PostMapping(ItemConstants.ITEMS_END_POINT_V1)
+    @PostMapping(ITEMS_END_POINT_V1)
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<Item> createItem(@RequestBody Item item){
         return itemReactiveRepository.save(item);
     }
 
-    @PutMapping(ItemConstants.ITEMS_END_POINT_V1+ "/{id}")
+    @PutMapping(ITEMS_END_POINT_V1+ ID_SUFFIX)
     public Mono<ResponseEntity<Item>> updateItem(@PathVariable String id, @RequestBody Item item){
         return itemReactiveRepository.findById(id)
                 .flatMap(itemToUpdate -> {
@@ -52,7 +53,7 @@ public class ItemController {
                 .defaultIfEmpty(ITEM_NOT_FOUND_RESPONSE);
     }
 
-    @DeleteMapping(ItemConstants.ITEMS_END_POINT_V1 + "/{id}")
+    @DeleteMapping(ITEMS_END_POINT_V1 + ID_SUFFIX)
     public Mono<ResponseEntity<Void>> deleteItemById(@PathVariable String id) {
        return itemReactiveRepository.findById(id)
                 .map(item -> new ResponseEntity<Void>(HttpStatus.OK))
