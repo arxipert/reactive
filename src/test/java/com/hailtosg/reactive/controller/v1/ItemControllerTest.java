@@ -22,10 +22,11 @@ import java.util.List;
 
 import static com.hailtosg.reactive.constants.ItemConstants.ITEMS_END_POINT_V1;
 import static com.hailtosg.reactive.constants.ItemConstants.ID_SUFFIX;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@DirtiesContext
+@DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 @AutoConfigureWebTestClient(timeout = "36000")
 @ActiveProfiles("test")
 public class ItemControllerTest {

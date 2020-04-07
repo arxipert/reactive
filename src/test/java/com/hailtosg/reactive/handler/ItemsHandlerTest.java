@@ -21,10 +21,11 @@ import java.util.List;
 
 import static com.hailtosg.reactive.constants.ItemConstants.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@DirtiesContext
+@DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 @AutoConfigureWebTestClient(timeout = "36000")
 @ActiveProfiles("test")
 public class ItemsHandlerTest {

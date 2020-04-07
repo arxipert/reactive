@@ -19,9 +19,11 @@ import reactor.test.StepVerifier;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@DirtiesContext
+@DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 @AutoConfigureWebTestClient(timeout = "36000")
 public class FluxAndMonoControllerTest {
 

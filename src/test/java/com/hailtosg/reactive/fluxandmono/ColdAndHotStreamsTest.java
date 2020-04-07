@@ -2,11 +2,15 @@ package com.hailtosg.reactive.fluxandmono;
 
 import lombok.SneakyThrows;
 import org.junit.Test;
+import org.springframework.test.annotation.DirtiesContext;
 import reactor.core.publisher.ConnectableFlux;
 import reactor.core.publisher.Flux;
 
 import java.time.Duration;
 
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
+
+@DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 public class ColdAndHotStreamsTest {
 
 
