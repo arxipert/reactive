@@ -11,6 +11,10 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 
 import static com.hailtosg.reactive.constants.ItemConstants.ID_SUFFIX;
 import static com.hailtosg.reactive.constants.ItemConstants.ITEMS_FUNCTIONAL_END_POINT_V1;
+import static org.springframework.http.MediaType.*;
+import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
+import static org.springframework.web.reactive.function.server.RequestPredicates.accept;
+import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
 
 @Configuration
@@ -18,15 +22,22 @@ public class ItemsRouter {
 
     @Bean
     public RouterFunction<ServerResponse> itemsRoute(ItemsHandlerFunction handlerFunction) {
-        return RouterFunctions.route(RequestPredicates.GET(ITEMS_FUNCTIONAL_END_POINT_V1)
-                        .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)), handlerFunction::items)
-                .andRoute(RequestPredicates.GET(ITEMS_FUNCTIONAL_END_POINT_V1 + ID_SUFFIX)
-                        .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)), handlerFunction::itemById)
+        return route(GET(ITEMS_FUNCTIONAL_END_POINT_V1)
+                        .and(accept(APPLICATION_JSON)), handlerFunction::items)
+                .andRoute(GET(ITEMS_FUNCTIONAL_END_POINT_V1 + ID_SUFFIX)
+                        .and(accept(APPLICATION_JSON)), handlerFunction::itemById)
                 .andRoute(RequestPredicates.POST(ITEMS_FUNCTIONAL_END_POINT_V1)
-                        .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)), handlerFunction::createItem)
+                        .and(accept(APPLICATION_JSON)), handlerFunction::createItem)
                 .andRoute(RequestPredicates.DELETE(ITEMS_FUNCTIONAL_END_POINT_V1 + ID_SUFFIX),
                         handlerFunction::deleteItem)
                 .andRoute(RequestPredicates.PUT(ITEMS_FUNCTIONAL_END_POINT_V1 + ID_SUFFIX)
-                        .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)), handlerFunction::updateItem);
+                        .and(accept(APPLICATION_JSON)), handlerFunction::updateItem);
+    }
+
+    @Bean
+    public RouterFunction<ServerResponse> errorRoute(ItemsHandlerFunction handlerFunction) {
+        return route(GET("/fun/rte")
+                .and(accept(APPLICATION_JSON)), handlerFunction::itemsRte);
+
     }
 }

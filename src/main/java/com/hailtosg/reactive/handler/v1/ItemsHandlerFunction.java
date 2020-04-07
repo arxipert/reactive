@@ -72,4 +72,8 @@ public class ItemsHandlerFunction {
                         .contentType(APPLICATION_JSON).body(updatedItem, Item.class))
                 .switchIfEmpty(ItemConstants.NOT_FOUND_SERVER_RESPONSE);
     }
+
+    public Mono<ServerResponse> itemsRte(ServerRequest request) {
+        throw new RuntimeException("funRTE");
+    }
 }
