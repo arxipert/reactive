@@ -1,6 +1,5 @@
 package com.hailtosg.reactive.controller.v1;
 
-import com.hailtosg.reactive.constants.ItemConstants;
 import com.hailtosg.reactive.document.Item;
 import com.hailtosg.reactive.repository.ItemReactiveRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -11,8 +10,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import static com.hailtosg.reactive.constants.ItemConstants.*;
-import static com.hailtosg.reactive.constants.ItemConstants.ITEM_NOT_FOUND_RESPONSE;
-import static com.hailtosg.reactive.constants.ItemConstants.NOT_FOUND_RESPONSE;
 
 @RestController
 @Slf4j
