@@ -18,6 +18,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static com.hailtosg.reactive.constants.ItemConstants.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -147,5 +148,16 @@ public class ItemsHandlerTest {
                 .exchange()
                 .expectStatus()
                 .isNotFound();
+    }
+
+    @Test
+    public void testRteFuncHandling() {
+        client.get()
+                .uri("/fun/rte")
+                .exchange()
+                .expectStatus()
+                .is5xxServerError()
+                .expectBody()
+                .jsonPath("$.message", "funRTE");
     }
 }
