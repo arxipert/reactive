@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import static com.hailtosg.reactive.constants.ItemConstants.ITEM_NOT_FOUND_RESPONSE;
+import static com.hailtosg.reactive.constants.ItemConstants.NOT_FOUND_RESPONSE;
+
 @RestController
 @Slf4j
 public class ItemController {
@@ -28,7 +31,7 @@ public class ItemController {
     public Mono<ResponseEntity<Item>> getItemById(@PathVariable String id){
         return itemReactiveRepository.findById(id)
                 .map((item -> new ResponseEntity<>(item, HttpStatus.OK)))
-                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+                .defaultIfEmpty(ITEM_NOT_FOUND_RESPONSE);
     }
 
     @PostMapping(ItemConstants.ITEMS_END_POINT_V1)
@@ -46,11 +49,15 @@ public class ItemController {
                     return itemReactiveRepository.save(itemToUpdate).log();
                 })
                 .map(updatedItem -> new ResponseEntity<>(updatedItem, HttpStatus.OK))
-                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+                .defaultIfEmpty(ITEM_NOT_FOUND_RESPONSE);
     }
 
     @DeleteMapping(ItemConstants.ITEMS_END_POINT_V1 + "/{id}")
-    public Mono <Void> deleteItemById(@PathVariable String id) {
-        return itemReactiveRepository.deleteById(id).log();
+    public Mono<ResponseEntity<Void>> deleteItemById(@PathVariable String id) {
+       return itemReactiveRepository.findById(id)
+                .map(item -> new ResponseEntity<Void>(HttpStatus.OK))
+                .defaultIfEmpty(NOT_FOUND_RESPONSE)
+                .doOnSuccess(responseEntity ->
+                        itemReactiveRepository.deleteById(id).log().subscribe());
     }
 }

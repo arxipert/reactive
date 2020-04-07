@@ -35,7 +35,7 @@ public class ItemsHandlerFunction {
                  flatMap(item -> ServerResponse.ok()
                          .contentType(APPLICATION_JSON)
                          .body(fromValue(item)))
-                 .switchIfEmpty(ItemConstants.NOT_FOUND_RESPONSE);
+                 .switchIfEmpty(ItemConstants.NOT_FOUND_SERVER_RESPONSE);
     }
 
     public Mono<ServerResponse> createItem(ServerRequest request) {
@@ -55,7 +55,7 @@ public class ItemsHandlerFunction {
                  flatMap(item -> ServerResponse.ok()
                          .contentType(APPLICATION_JSON)
                          .body(itemRepository.deleteById(id), Void.class))
-                 .switchIfEmpty(ItemConstants.NOT_FOUND_RESPONSE);
+                 .switchIfEmpty(ItemConstants.NOT_FOUND_SERVER_RESPONSE);
     }
 //
     public Mono<ServerResponse> updateItem(ServerRequest request) {
@@ -70,6 +70,6 @@ public class ItemsHandlerFunction {
                 )
                 .flatMap(updatedItem -> ServerResponse.ok()
                         .contentType(APPLICATION_JSON).body(updatedItem, Item.class))
-                .switchIfEmpty(ItemConstants.NOT_FOUND_RESPONSE);
+                .switchIfEmpty(ItemConstants.NOT_FOUND_SERVER_RESPONSE);
     }
 }
