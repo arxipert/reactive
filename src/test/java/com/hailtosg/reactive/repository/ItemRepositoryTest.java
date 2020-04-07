@@ -21,7 +21,8 @@ public class ItemRepositoryTest {
     @Autowired
     ItemReactiveRepository itemRepository;
 
-    List<Item> items = Arrays.asList(new Item(null, "Vax", 100.00)
+    List<Item> items = Arrays.asList(
+            new Item(null, "Vax", 100.00)
             ,new Item(null, "Fax", 200.00)
             ,new Item("ABC", "Zax", 250.00)
             ,new Item(null, "Rax", 300.00));

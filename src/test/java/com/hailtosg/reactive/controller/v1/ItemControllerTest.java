@@ -3,14 +3,12 @@ package com.hailtosg.reactive.controller.v1;
 import com.hailtosg.reactive.constants.ItemConstants;
 import com.hailtosg.reactive.document.Item;
 import com.hailtosg.reactive.repository.ItemReactiveRepository;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -21,6 +19,9 @@ import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static com.hailtosg.reactive.constants.ItemConstants.ITEMS_END_POINT_V1;
+import static com.hailtosg.reactive.constants.ItemConstants.ID_SUFFIX;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -52,7 +53,7 @@ public class ItemControllerTest {
     @Test
     public void getAllItems() {
         client.get()
-                .uri(ItemConstants.ITEMS_END_POINT_V1)
+                .uri(ITEMS_END_POINT_V1)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus()
@@ -64,7 +65,7 @@ public class ItemControllerTest {
     @Test
     public void getOneById() {
         client.get()
-                .uri(ItemConstants.ITEMS_END_POINT_V1.concat("/{id}"), "ABC")
+                .uri(ITEMS_END_POINT_V1.concat(ID_SUFFIX), "ABC")
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus()
@@ -76,7 +77,7 @@ public class ItemControllerTest {
     @Test
     public void getOneByIdNotFound() {
         client.get()
-                .uri(ItemConstants.ITEMS_END_POINT_V1.concat("/{id}"), "DEF")
+                .uri(ITEMS_END_POINT_V1.concat(ID_SUFFIX), "DEF")
                 .exchange()
                 .expectStatus()
                     .isNotFound();
@@ -86,7 +87,7 @@ public class ItemControllerTest {
     public void createNewItem() {
         Item item = new Item(null, "Lax", 400.00);
         client.post()
-                .uri(ItemConstants.ITEMS_END_POINT_V1)
+                .uri(ITEMS_END_POINT_V1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(item), Item.class)
                 .exchange()
@@ -101,7 +102,7 @@ public class ItemControllerTest {
     @Test
     public void delete() {
         client.delete()
-                .uri(ItemConstants.ITEMS_END_POINT_V1.concat("/{id}"), "ABC")
+                .uri(ITEMS_END_POINT_V1.concat(ID_SUFFIX), "ABC")
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus()
@@ -113,7 +114,7 @@ public class ItemControllerTest {
     public void updateOne() {
         Item item = new Item(null, "Lax", 400.00);
         client.put()
-                .uri(ItemConstants.ITEMS_END_POINT_V1.concat("/{id}"), "ABC")
+                .uri(ITEMS_END_POINT_V1.concat(ID_SUFFIX), "ABC")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(item), Item.class)
                 .exchange()
@@ -129,11 +130,22 @@ public class ItemControllerTest {
     public void updateOneNotFound() {
         Item item = new Item(null, "Lax", 400.00);
         client.put()
-                .uri(ItemConstants.ITEMS_END_POINT_V1.concat("/{id}"), "DEF")
+                .uri(ItemConstants.ITEMS_END_POINT_V1.concat(ID_SUFFIX), "DEF")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(item), Item.class)
                 .exchange()
                 .expectStatus()
                     .isNotFound();
+    }
+
+    @Test
+    public void getRTException() {
+        client.get()
+                .uri(ITEMS_END_POINT_V1.concat("/rte"))
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().is5xxServerError()
+                .expectBody(String.class)
+                .isEqualTo("RTE occurred");
     }
 }

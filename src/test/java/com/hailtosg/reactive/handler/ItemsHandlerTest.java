@@ -1,6 +1,5 @@
-package com.hailtosg.reactive.controller.v1;
+package com.hailtosg.reactive.handler;
 
-import com.hailtosg.reactive.constants.ItemConstants;
 import com.hailtosg.reactive.document.Item;
 import com.hailtosg.reactive.repository.ItemReactiveRepository;
 import org.junit.Before;
@@ -20,6 +19,7 @@ import reactor.core.publisher.Mono;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.hailtosg.reactive.constants.ItemConstants.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @RunWith(SpringRunner.class)
@@ -52,7 +52,7 @@ public class ItemsHandlerTest {
     @Test
     public void getAllItems() {
         client.get()
-                .uri(ItemConstants.ITEMS_FUNCTIONAL_END_POINT_V1)
+                .uri(ITEMS_FUNCTIONAL_END_POINT_V1)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus()
@@ -64,7 +64,7 @@ public class ItemsHandlerTest {
     @Test
     public void getOneById() {
         client.get()
-                .uri(ItemConstants.ITEMS_FUNCTIONAL_END_POINT_V1.concat("/{id}"), "ABC")
+                .uri(ITEMS_FUNCTIONAL_END_POINT_V1.concat(ID_SUFFIX), "ABC")
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus()
@@ -76,7 +76,7 @@ public class ItemsHandlerTest {
     @Test
     public void getOneByIdNotFound() {
         client.get()
-                .uri(ItemConstants.ITEMS_FUNCTIONAL_END_POINT_V1.concat("/{id}"), "DEF")
+                .uri(ITEMS_FUNCTIONAL_END_POINT_V1.concat(ID_SUFFIX), "DEF")
                 .exchange()
                 .expectStatus()
                 .isNotFound();
@@ -86,14 +86,14 @@ public class ItemsHandlerTest {
     public void createNewItem() {
         Item item = new Item(null, "Lax", 400.00);
         client.post()
-                .uri(ItemConstants.ITEMS_FUNCTIONAL_END_POINT_V1)
+                .uri(ITEMS_FUNCTIONAL_END_POINT_V1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(item), Item.class)
                 .exchange()
                 .expectStatus()
                     .isCreated()
                 .expectHeader().value("Location", location ->
-                    assertTrue(location.contains(ItemConstants.ITEMS_FUNCTIONAL_END_POINT_V1)))
+                    assertTrue(location.contains(ITEMS_FUNCTIONAL_END_POINT_V1)))
                 .expectBody()
                     .jsonPath("$.id").isNotEmpty()
                     .jsonPath("$.desc").isEqualTo("Lax")
@@ -103,7 +103,7 @@ public class ItemsHandlerTest {
     @Test
     public void delete() {
         client.delete()
-                .uri(ItemConstants.ITEMS_FUNCTIONAL_END_POINT_V1.concat("/{id}"), "ABC")
+                .uri(ITEMS_FUNCTIONAL_END_POINT_V1.concat(ID_SUFFIX), "ABC")
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus()
@@ -114,7 +114,7 @@ public class ItemsHandlerTest {
     @Test
     public void deleteNotFound() {
         client.delete()
-                .uri(ItemConstants.ITEMS_FUNCTIONAL_END_POINT_V1.concat("/{id}"), "FEF")
+                .uri(ITEMS_FUNCTIONAL_END_POINT_V1.concat(ID_SUFFIX), "FEF")
                 .exchange()
                 .expectStatus()
                     .isNotFound();
@@ -124,7 +124,7 @@ public class ItemsHandlerTest {
     public void updateOne() {
         Item item = new Item(null, "Lax", 400.00);
         client.put()
-                .uri(ItemConstants.ITEMS_END_POINT_V1.concat("/{id}"), "ABC")
+                .uri(ITEMS_END_POINT_V1.concat(ID_SUFFIX), "ABC")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(item), Item.class)
                 .exchange()
@@ -140,7 +140,7 @@ public class ItemsHandlerTest {
     public void updateOneNotFound() {
         Item item = new Item(null, "Lax", 400.00);
         client.put()
-                .uri(ItemConstants.ITEMS_END_POINT_V1.concat("/{id}"), "DEF")
+                .uri(ITEMS_END_POINT_V1.concat(ID_SUFFIX), "DEF")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(item), Item.class)
                 .exchange()
