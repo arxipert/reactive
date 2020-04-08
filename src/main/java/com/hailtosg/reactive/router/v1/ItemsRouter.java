@@ -9,8 +9,7 @@ import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
-import static com.hailtosg.reactive.constants.ItemConstants.ID_SUFFIX;
-import static com.hailtosg.reactive.constants.ItemConstants.ITEMS_FUNCTIONAL_END_POINT_V1;
+import static com.hailtosg.reactive.constants.ItemConstants.*;
 import static org.springframework.http.MediaType.*;
 import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
 import static org.springframework.web.reactive.function.server.RequestPredicates.accept;
@@ -38,6 +37,12 @@ public class ItemsRouter {
     public RouterFunction<ServerResponse> errorRoute(ItemsHandlerFunction handlerFunction) {
         return route(GET("/fun/rte")
                 .and(accept(APPLICATION_JSON)), handlerFunction::itemsRte);
+    }
+
+    @Bean
+    public RouterFunction<ServerResponse> itemsCappedRoute(ItemsHandlerFunction handlerFunction) {
+        return route(GET(STREAM_CAPPED_ITEMS_END_POINT_V1)
+                .and(accept(APPLICATION_JSON)), handlerFunction::cappedItems);
 
     }
 }

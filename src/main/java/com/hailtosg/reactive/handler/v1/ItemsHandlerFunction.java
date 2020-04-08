@@ -2,6 +2,8 @@ package com.hailtosg.reactive.handler.v1;
 
 import com.hailtosg.reactive.constants.ItemConstants;
 import com.hailtosg.reactive.document.Item;
+import com.hailtosg.reactive.document.ItemCapped;
+import com.hailtosg.reactive.repository.ItemReactiveCappedRepository;
 import com.hailtosg.reactive.repository.ItemReactiveRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -10,7 +12,9 @@ import reactor.core.publisher.Mono;
 
 import java.net.URI;
 
+import static com.hailtosg.reactive.constants.ItemConstants.STREAM_CAPPED_ITEMS_END_POINT_V1;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.http.MediaType.APPLICATION_STREAM_JSON;
 import static org.springframework.web.reactive.function.BodyInserters.fromValue;
 //TODO: Validator)
 @Component
@@ -18,9 +22,12 @@ public class ItemsHandlerFunction {
 
 
     ItemReactiveRepository itemRepository;
+    ItemReactiveCappedRepository itemReactiveCappedRepository;
 
-    ItemsHandlerFunction (ItemReactiveRepository itemReactiveRepository) {
-        itemRepository = itemReactiveRepository;
+    ItemsHandlerFunction (ItemReactiveRepository itemReactiveRepository,
+                          ItemReactiveCappedRepository itemReactiveCappedRepository) {
+        this.itemRepository = itemReactiveRepository;
+        this.itemReactiveCappedRepository = itemReactiveCappedRepository;
     }
 
     public Mono<ServerResponse> items(ServerRequest request) {
@@ -75,5 +82,11 @@ public class ItemsHandlerFunction {
 
     public Mono<ServerResponse> itemsRte(ServerRequest request) {
         throw new RuntimeException("funRTE");
+    }
+
+    public Mono<ServerResponse> cappedItems(ServerRequest request) {
+        return ServerResponse.ok()
+                .contentType(APPLICATION_STREAM_JSON)
+                .body(itemReactiveCappedRepository.findItemCappedBy(), ItemCapped.class);
     }
 }
