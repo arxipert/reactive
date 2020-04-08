@@ -59,10 +59,11 @@ public class ItemController {
 
     @DeleteMapping(ITEMS_END_POINT_V1 + ID_SUFFIX)
     public Mono<ResponseEntity<Void>> deleteItemById(@PathVariable String id) {
-       return itemReactiveRepository.findById(id)
-                .map(item -> new ResponseEntity<Void>(HttpStatus.OK))
-                .defaultIfEmpty(NOT_FOUND_RESPONSE)
-                .doOnSuccess(responseEntity ->
-                        itemReactiveRepository.deleteById(id).log().subscribe());
+        return itemReactiveRepository.findById(id)
+                .map(item -> {
+                    itemReactiveRepository.deleteById(id).log().subscribe();
+                    return new ResponseEntity<Void>(HttpStatus.OK);
+                })
+                .defaultIfEmpty(NOT_FOUND_RESPONSE);
     }
 }
