@@ -1,9 +1,7 @@
 package com.hailtosg.reactive.controller.v1;
 
-import com.hailtosg.reactive.document.Item;
 import com.hailtosg.reactive.document.ItemCapped;
 import com.hailtosg.reactive.repository.ItemReactiveCappedRepository;
-import com.hailtosg.reactive.repository.ItemReactiveRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
