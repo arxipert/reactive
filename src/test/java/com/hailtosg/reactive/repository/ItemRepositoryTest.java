@@ -1,8 +1,8 @@
 package com.hailtosg.reactive.repository;
 
 import com.hailtosg.reactive.document.Item;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
@@ -22,7 +22,6 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 public class ItemRepositoryTest {
 
-    @Autowired
     ItemReactiveRepository itemRepository;
 
     List<Item> items = Arrays.asList(
@@ -31,8 +30,11 @@ public class ItemRepositoryTest {
             ,new Item("ABC", "Zax", 250.00)
             ,new Item(null, "Rax", 300.00));
 
-    @Before
-    public void setUp(){
+    @BeforeAll
+    @Autowired
+    public void setUp(ItemReactiveRepository itemRepository){
+        this.itemRepository = itemRepository;
+
         itemRepository.deleteAll()
                 .thenMany(Flux.fromIterable(items).log())
                 .flatMap(itemRepository::save)
